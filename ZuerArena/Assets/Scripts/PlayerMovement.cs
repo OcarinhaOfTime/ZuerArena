@@ -6,15 +6,27 @@ public class PlayerMovement : MonoBehaviour {
     public float movePower = 100f;
     public float maxSpeed = 10;
     Rigidbody2D rb2d;
+    Animator animator;
 
 	void Start () {
         rb2d = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 	
 	void Update () {
         var mouseGlobalPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        transform.rotation = Quaternion.LookRotation(transform.position - mouseGlobalPos, Vector3.forward);
-        transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z);      
+        var rot = Quaternion.LookRotation(transform.position - mouseGlobalPos, Vector3.forward).eulerAngles;
+        rot.x = 0;
+        rot.y = 0;
+        transform.rotation = Quaternion.Euler( rot);
+    }
+
+    void FourDirUpdate() {
+        var mouseGlobalPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        var rot = Quaternion.LookRotation(transform.position - mouseGlobalPos, Vector3.forward).eulerAngles;
+        float angle = (rot.z + 45 + 90) % 360;
+        angle /= 360;
+        animator.SetFloat("angle", angle);
     }
 
     private void FixedUpdate() {
@@ -22,7 +34,7 @@ public class PlayerMovement : MonoBehaviour {
         float h = Input.GetAxis("Horizontal");
 
         if((rb2d.velocity.magnitude < maxSpeed && v >= 0) || (rb2d.velocity.magnitude > -maxSpeed && v <= 0)) {
-            rb2d.AddForce(transform.up * movePower * v + transform.right * movePower * h);
+            rb2d.AddForce(Vector3.up * movePower * v + Vector3.right * movePower * h);
         }
     }
 }
