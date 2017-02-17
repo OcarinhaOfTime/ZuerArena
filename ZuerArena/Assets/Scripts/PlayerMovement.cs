@@ -15,10 +15,8 @@ public class PlayerMovement : MonoBehaviour {
 	
 	void Update () {
         var mouseGlobalPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        var rot = Quaternion.LookRotation(transform.position - mouseGlobalPos, Vector3.forward).eulerAngles;
-        rot.x = 0;
-        rot.y = 0;
-        transform.rotation = Quaternion.Euler( rot);
+        var z = Quaternion.LookRotation(transform.position - mouseGlobalPos, Vector3.forward).eulerAngles.z;
+        transform.rotation = Quaternion.Euler(0, 0, z + 180);
     }
 
     void FourDirUpdate() {
@@ -36,5 +34,7 @@ public class PlayerMovement : MonoBehaviour {
         if((rb2d.velocity.magnitude < maxSpeed && v >= 0) || (rb2d.velocity.magnitude > -maxSpeed && v <= 0)) {
             rb2d.AddForce(Vector3.up * movePower * v + Vector3.right * movePower * h);
         }
+
+        animator.SetFloat("speed",Mathf.Abs(h) + Mathf.Abs(v));
     }
 }
