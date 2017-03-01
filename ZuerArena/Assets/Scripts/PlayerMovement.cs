@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	void Start () {
         rb2d = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
     }
 	
 	void Update () {
